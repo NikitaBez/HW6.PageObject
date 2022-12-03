@@ -1,42 +1,42 @@
 package ru.netology.web.test;
 
+import io.opentelemetry.sdk.trace.samplers.SamplingResult;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.netology.web.data.DataHelper;
-import ru.netology.web.page.LoginPageV1;
+import ru.netology.web.page.DashboardPage;
 import ru.netology.web.page.LoginPageV2;
-import ru.netology.web.page.LoginPageV3;
 
 import static com.codeborne.selenide.Selenide.open;
 
-class MoneyTransferTest {
+public class MoneyTransferTest {
     @Test
-    void shouldTransferMoneyBetweenOwnCardsV1() {
-        open("http://localhost:9999");
-        var loginPage = new LoginPageV1();
-//    var loginPage = open("http://localhost:9999", LoginPageV1.class);
+        void shouldTransferMoneyFromFirstToSecondV2() {
+        var loginPage = open("http://localhost:9999", LoginPageV2.class);
         var authInfo = DataHelper.getAuthInfo();
         var verificationPage = loginPage.validLogin(authInfo);
         var verificationCode = DataHelper.getVerificationCodeFor(authInfo);
-        verificationPage.validVerify(verificationCode);
-    }
+        var dashboardPage = verificationPage.validVerify(verificationCode);
+        var firstCardInfo = DataHelper.getFirstCardNumber();
+        var secondCardInfo = DataHelper.getSecondCardNumber();
+//        var firstCardBalance = dashboardPage.getCardBalance(firstCardInfo);
+//        var secondCardBalance = dashboardPage.getCardBalance(secondCardInfo);
+        var firstCardBalance = dashboardPage.getFirstCardBalance();
+        var secondCardBalance = dashboardPage.getSecondCardBalance();
+        var transferAmount = DataHelper.generateValidTransferAmountValue(firstCardBalance);
+        var expectedBalanceOfFirstCard = firstCardBalance - transferAmount;
+        var expectedBalanceOfSecondCard = secondCardBalance + transferAmount;
+        var transferPage = dashboardPage.selectCardToTransfer();
+//        var transferPage = dashboardPage.selectCardToTransfer(secondCardInfo);
+        dashboardPage = transferPage.makeValidTransfer(String.valueOf(transferAmount),firstCardInfo);
+//        var actualBalanceFirstCard = dashboardPage.getCardBalance(firstCardInfo);
+//        var actualBalanceSecondCard = dashboardPage.getCardBalance(secondCardInfo);
+        var actualBalanceFirstCard = dashboardPage.getFirstCardBalance();
+        var actualBalanceSecondCard = dashboardPage.getSecondCardBalance();
+        Assertions.assertEquals(expectedBalanceOfFirstCard, actualBalanceFirstCard);
+        Assertions.assertEquals(expectedBalanceOfSecondCard, actualBalanceSecondCard);
 
-    @Test
-    void shouldTransferMoneyBetweenOwnCardsV2() {
-        open("http://localhost:9999");
-        var loginPage = new LoginPageV2();
-//    var loginPage = open("http://localhost:9999", LoginPageV2.class);
-        var authInfo = DataHelper.getAuthInfo();
-        var verificationPage = loginPage.validLogin(authInfo);
-        var verificationCode = DataHelper.getVerificationCodeFor(authInfo);
-        verificationPage.validVerify(verificationCode);
-    }
 
-    @Test
-    void shouldTransferMoneyBetweenOwnCardsV3() {
-        var loginPage = open("http://localhost:9999", LoginPageV3.class);
-        var authInfo = DataHelper.getAuthInfo();
-        var verificationPage = loginPage.validLogin(authInfo);
-        var verificationCode = DataHelper.getVerificationCodeFor(authInfo);
-        verificationPage.validVerify(verificationCode);
+
     }
 }
