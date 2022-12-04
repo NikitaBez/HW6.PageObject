@@ -9,9 +9,9 @@ import static com.codeborne.selenide.Selenide.$;
 
 public class TransferPage {
     private SelenideElement transferHeader = $(byText("Пополнение карты"));
-    private SelenideElement amountToTransferInput = $("[data-test-id=amount]");
-    private SelenideElement cardFromInput = $("[data-test-id=from]");
-    private SelenideElement acceptTransferButton = $("[data-test-id=action-transfer]");
+    private SelenideElement amountToTransferInput = $("[data-test-id='amount'] input");
+    private SelenideElement cardFromInput = $("[data-test-id='from'] input");
+    private SelenideElement acceptTransferButton = $("[data-test-id='action-transfer']");
 
     public void TransferPage() {
         transferHeader.shouldBe(Condition.visible);
