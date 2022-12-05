@@ -32,7 +32,7 @@ public class DashboardPage {
 }
 
     public int getSecondCardBalance() {
-        var text = cards.first().text();
+        var text = cards.last().text();
         return extractBalance(text);
     }
 
