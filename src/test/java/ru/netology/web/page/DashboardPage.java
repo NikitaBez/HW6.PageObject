@@ -42,12 +42,6 @@ public class DashboardPage {
         var value = text.substring(start + balanceStart.length(), finish);
         return Integer.parseInt(value);
     }
-
-//    public TransferPage selectCardToTransfer(DataHelper.CardInfo cardInfo) {
-//        cards.findBy(attribute("data-test-id", cardInfo.getCardId())).$("button").click();
-//        return new TransferPage();
-//    }
-
     public TransferPage selectCardToTransfer(){
         refillButtonFirstCard.click();
         return new TransferPage();
